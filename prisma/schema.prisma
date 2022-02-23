@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id         String    @id @db.Uuid
+  email      String?   @unique
+  profile    profile?
+  createdAt  DateTime  @default(now())
+  updated_at DateTime? @db.Timestamptz(6)
+}
+
+model profile {
+  id         String    @id @db.Uuid
+  username   String?   @unique
+  avatar_url String?
+  user       user      @relation(fields: [id], references: [id])
+  teamId     String?   @db.Uuid
+  team       team?     @relation(fields: [teamId], references: [id])
+  createdAt  DateTime  @default(now())
+  updated_at DateTime? @db.Timestamptz(6)
+}
+
+model project {
+  id         String     @id @db.Uuid
+  title      String
+  team       team       @relation(fields: [teamId], references: [id])
+  createdAt  DateTime   @default(now())
+  updated_at DateTime?  @db.Timestamptz(6)
+  teamId     String     @db.Uuid
+  contract   contract[]
+}
+
+model team {
+  id         String    @id @db.Uuid
+  title      String
+  createdAt  DateTime  @default(now())
+  updated_at DateTime? @db.Timestamptz(6)
+  profiles   profile[]
+  project    project[]
+}
+
+model contract {
+  id         String   @id @default(cuid())
+  name       String
+  info       Json
+  compiledAt DateTime
+  projectId  String   @db.Uuid
+  project    project  @relation(fields: [projectId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
