@@ -4,6 +4,7 @@ import {
 
 import {
   TWCircleSpinner,
+  ContractDeploymentDashboardProject,
   ContractDeploymentDashboardProjectsNewButton,
   ContractDeploymentDashboardProjectsCreateButton
 } from '.'
@@ -19,12 +20,11 @@ const ContractDeploymentDashboardProjects = () => {
         'projects',
         'GET'
       )
-      console.log("PROJECTS", _projects)
       setProjects(_projects)
     }
 
     getProjects()
-  })
+  }, [])
 
   return (
     <div className=''>
@@ -35,12 +35,20 @@ const ContractDeploymentDashboardProjects = () => {
             message="Loading projects..."
           />
         }
-        {projects && projects.map(
-          (project, index) => (
-            <div key={`project-${index}`}>{project.name}</div>
-          )
-        )}
+        {projects && 
+          <div className='flex mb-3'>
+            {projects.map(
+              (project, index) => (
+                <ContractDeploymentDashboardProject
+                  key={`project-${index}`}
+                  project={project}
+                />
+              )
+            )}
+          </div>
+        }
         <ContractDeploymentDashboardProjectsNewButton />
+        &nbsp;
         <ContractDeploymentDashboardProjectsCreateButton />
       </div>
     </div>
