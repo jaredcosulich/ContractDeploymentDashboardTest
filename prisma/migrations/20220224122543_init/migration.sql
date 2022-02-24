@@ -13,7 +13,7 @@ CREATE TABLE "profile" (
     "id" UUID NOT NULL,
     "username" TEXT,
     "avatar_url" TEXT,
-    "teamId" UUID,
+    "userId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6),
 
@@ -24,9 +24,9 @@ CREATE TABLE "profile" (
 CREATE TABLE "project" (
     "id" UUID NOT NULL,
     "title" TEXT NOT NULL,
+    "teamId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6),
-    "teamId" UUID NOT NULL,
 
     CONSTRAINT "project_pkey" PRIMARY KEY ("id")
 );
@@ -43,7 +43,7 @@ CREATE TABLE "team" (
 
 -- CreateTable
 CREATE TABLE "contract" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "info" JSONB NOT NULL,
     "compiledAt" TIMESTAMP(3) NOT NULL,
@@ -54,20 +54,38 @@ CREATE TABLE "contract" (
     CONSTRAINT "contract_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "_profileToteam" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "profile_username_key" ON "profile"("username");
 
--- AddForeignKey
-ALTER TABLE "profile" ADD CONSTRAINT "profile_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "profile_userId_key" ON "profile"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_profileToteam_AB_unique" ON "_profileToteam"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_profileToteam_B_index" ON "_profileToteam"("B");
 
 -- AddForeignKey
-ALTER TABLE "profile" ADD CONSTRAINT "profile_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "team"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "profile" ADD CONSTRAINT "profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "project" ADD CONSTRAINT "project_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "contract" ADD CONSTRAINT "contract_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_profileToteam" ADD FOREIGN KEY ("A") REFERENCES "profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_profileToteam" ADD FOREIGN KEY ("B") REFERENCES "team"("id") ON DELETE CASCADE ON UPDATE CASCADE;

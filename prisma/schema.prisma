@@ -8,7 +8,7 @@ datasource db {
 }
 
 model user {
-  id         String    @id @db.Uuid
+  id         String    @id @default(uuid()) @db.Uuid
   email      String?   @unique
   profile    profile?
   createdAt  DateTime  @default(now())
@@ -16,37 +16,37 @@ model user {
 }
 
 model profile {
-  id         String    @id @db.Uuid
+  id         String    @id @default(uuid()) @db.Uuid
   username   String?   @unique
   avatar_url String?
-  user       user      @relation(fields: [id], references: [id])
-  teamId     String?   @db.Uuid
-  team       team?     @relation(fields: [teamId], references: [id])
+  userId     String    @unique @db.Uuid
+  user       user?     @relation(fields: [userId], references: [id])
   createdAt  DateTime  @default(now())
   updated_at DateTime? @db.Timestamptz(6)
+  teams      team[]
 }
 
 model project {
-  id         String     @id @db.Uuid
+  id         String     @id @default(uuid()) @db.Uuid
   title      String
+  teamId     String     @db.Uuid
   team       team       @relation(fields: [teamId], references: [id])
   createdAt  DateTime   @default(now())
   updated_at DateTime?  @db.Timestamptz(6)
-  teamId     String     @db.Uuid
   contract   contract[]
 }
 
 model team {
-  id         String    @id @db.Uuid
+  id         String    @id @default(uuid()) @db.Uuid
   title      String
   createdAt  DateTime  @default(now())
   updated_at DateTime? @db.Timestamptz(6)
   profiles   profile[]
-  project    project[]
+  projects   project[]
 }
 
 model contract {
-  id         String   @id @default(cuid())
+  id         String   @id @default(uuid()) @db.Uuid
   name       String
   info       Json
   compiledAt DateTime

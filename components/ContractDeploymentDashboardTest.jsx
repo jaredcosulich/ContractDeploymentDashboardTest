@@ -1,5 +1,6 @@
 import {
-  ContractDeploymentDashboardTestLayout
+  ContractDeploymentDashboardTestLayout,
+  ContractDeploymentDashboardProjects
 } from '.'
 
 import { useUser, Auth } from '@supabase/supabase-auth-helpers/react'
@@ -42,6 +43,8 @@ const ContractDeploymentDashboardTest = ({  }) => {
 
   return (
     <ContractDeploymentDashboardTestLayout>
+      <ContractDeploymentDashboardProjects />
+
       <button onClick={() => supabaseClient.auth.signOut()}>Sign out</button>
       <p>user:</p>
       <pre>{JSON.stringify(user, null, 2)}</pre>

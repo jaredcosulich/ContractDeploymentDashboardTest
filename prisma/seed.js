@@ -1,3 +1,5 @@
+
+
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
@@ -11,14 +13,14 @@ async function main() {
         create: {
           username: "Alice",
           teams: {
-            create: {
+            create: [{
               title: "Nod Labs",
-              project: {
-                create: {
+              projects: {
+                create: [{
                   title: "SimpleURIAndPriceNFTWithWithdrawalRoyalty"
-                }
+                }]
               }  
-            }
+            }]
           }
         }
       },
