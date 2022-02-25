@@ -25,7 +25,7 @@ const ContractDeploymentDashboardProjectPage = () => {
     }
 
     getProject()
-  }, [])
+  }, [router.query])
   
   return (
     <ContractDeploymentDashboardTestLayout>
@@ -35,7 +35,18 @@ const ContractDeploymentDashboardProjectPage = () => {
         />
       }
       {project &&
-        <div>{project.title}</div>
+        <div>        
+          <h2 className='text-lg'>
+            {project.title}
+          </h2>
+          {project.contracts.map(
+            (contract) => (
+              <div key={`contract-${index}`}>
+                {contract.name}
+              </div>
+            )
+          )}
+        </div>        
       }
     </ContractDeploymentDashboardTestLayout>
   )

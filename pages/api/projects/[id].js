@@ -9,6 +9,9 @@ export default async function handle(req, res) {
   const project = await prismaClient.project.findFirst({
     where: {
       id: id
+    },
+    include: {
+      contracts: true
     }
   })
   res.json(project);
