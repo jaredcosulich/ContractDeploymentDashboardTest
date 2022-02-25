@@ -4,7 +4,8 @@ import {
 
 import {
   ContractDeploymentDashboardTestLayout,
-  TWCircleSpinner
+  TWCircleSpinner,
+  ContractDeploymentDashboardContract
 } from '../../components'
 
 import { useEffect, useState } from 'react';
@@ -36,16 +37,22 @@ const ContractDeploymentDashboardProjectPage = () => {
       }
       {project &&
         <div>        
-          <h2 className='text-lg'>
+          <h2 className='text-lg mb-6'>
+            <span className='font-bold mr-3'>
+              Project:
+            </span>
             {project.title}
           </h2>
-          {project.contracts.map(
-            (contract) => (
-              <div key={`contract-${index}`}>
-                {contract.name}
-              </div>
-            )
-          )}
+          <div className='flex'>
+            {project.contracts.map(
+              (contract, index) => (
+                <ContractDeploymentDashboardContract
+                  key={`contract-${index}`}
+                  contract={contract}
+                />
+              )
+            )}
+          </div>
         </div>        
       }
     </ContractDeploymentDashboardTestLayout>
