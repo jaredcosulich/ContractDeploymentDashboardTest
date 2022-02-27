@@ -2,14 +2,33 @@ import {
   SolidityABIFormInput
 } from '.'
 
-const SolidityContractConstructorForm = ({ abi }) => {
+import { useState } from 'react'
+
+const SolidityContractConstructorForm = ({ abi, onChange }) => {
+  const [args, setArgs] = useState({})
 
   const constructor = abi.find(
     (item) => item.type === 'constructor'
   )
 
-  const onChange = (name, value) => {
-    console.log(name, value)
+  const onInternalChange = (name, value) => {
+    setArgs({
+      ...args,
+      [name]: value
+    })
+
+    const argCount = Object.keys(args).length
+    if (argCount === constructor.inputs.length) {
+      const orderedArgs = []
+      for (const input of constructor.inputs) {
+        orderedArgs.push(
+          args[input.name]
+        )
+      }
+      onChange(orderedArgs)
+    } else {
+      onChange(null)
+    }
   }
   
   return (
@@ -20,7 +39,7 @@ const SolidityContractConstructorForm = ({ abi }) => {
             key={`abi-input-${index}`}
             className='py-1 first-letter:capitalize'
             abiInput={input}
-            onChange={onChange}
+            onChange={onInternalChange}
           />
         )
       )}

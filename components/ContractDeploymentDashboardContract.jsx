@@ -10,27 +10,30 @@ import {
 import { useEffect, useState } from 'react';
 
 const ContractDeploymentDashboardContract = ({ provider, contract }) => {
+  const [deploymentArguments, setDeploymentArguments] = useState();
   const [deploymentInfo, setDeploymentInfo] = useState();
 
   useEffect(() => {
+    if (deploymentInfo && !deploymentArguments) {
+      setDeploymentInfo(null)
+    }
+
+    if (!deploymentArguments) {
+      return;
+    }
+
     const getGasEstimate = async () => {
-      console.log("CONTRACT", contract)
       const _deploymentInfo = await getEthereumGasEstimate(
         provider,
         contract.info.abi,
         contract.info.bytecode,
-        [
-          "SimpleURI",
-          "SURI",
-          "https://arweave.net/4usQHuUrIKOMahMjSlgYsPKjOp2wPSP8Z8Qs6NmcT_k/",
-          "100000"
-        ]
+        deploymentArguments
       );
       setDeploymentInfo(_deploymentInfo);
     }
 
     getGasEstimate()
-  }, [provider, contract])
+  }, [provider, contract, deploymentArguments])
   
 
   return (
@@ -43,14 +46,32 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
           Compiled: 
         </span>
         {dateStringDiffToWords(contract.compiledAt)}
-      </div>    
-      <div className='text-xs'>
-        <div className='text-sm font-bold'>
-          Deployment Arguments
+      </div>
+      <div className='flex'>   
+        <div className='px-12 text-xs'>
+          <div className='text-sm font-bold'>
+            Deployment Arguments
+          </div>
+          <SolidityContractConstructorForm  
+            abi={contract.info.abi}
+            onChange={setDeploymentArguments}
+          />
         </div>
-        <SolidityContractConstructorForm  
-          abi={contract.info.abi}
-        />
+        <div className='px-12'>
+          <h2 className='mb-3'>
+            Deploy Contract
+          </h2>
+          {!deploymentInfo &&
+            <div className='text-xs py-6'>
+              Provide deployment arguments to get
+              <br/>
+              an estimate on gas or deploy the contract.
+            </div>
+          }
+          {deploymentInfo &&
+            JSON.stringify(deploymentInfo)
+          }
+        </div>
       </div>
     </div>
   )

@@ -13,9 +13,8 @@ const SolidityABIFormInput = ({ abiInput, className, onChange }) => {
     }
   }
 
-  console.log(abiInput)
-
-  const internalChange = (newValue) => {
+  const internalChange = (event) => {
+    const newValue = event.target.value;
     setValue(newValue)
     onChange(abiInput.name, newValue)
   }
@@ -29,6 +28,7 @@ const SolidityABIFormInput = ({ abiInput, className, onChange }) => {
         className='border px-3 py-1'
         type={getInputType()} 
         onChange={internalChange} 
+        value={value}
       />
     </div>
   )
