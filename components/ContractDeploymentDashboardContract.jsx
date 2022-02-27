@@ -3,6 +3,10 @@ import {
   dateStringDiffToWords
 } from '../lib'
 
+import {
+  SolidityContractConstructorForm
+} from '.'
+
 import { useEffect, useState } from 'react';
 
 const ContractDeploymentDashboardContract = ({ provider, contract }) => {
@@ -34,14 +38,19 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
       <h3 className='font-bold mb-3'>
         {contract.name}
       </h3>
-      <div className='text-xs'>
+      <div className='text-xs mb-6'>
         <span className='font-semibold mr-1'>
           Compiled: 
         </span>
         {dateStringDiffToWords(contract.compiledAt)}
-        <div>
-          {JSON.stringify(deploymentInfo || {}, null, 2)}
+      </div>    
+      <div className='text-xs'>
+        <div className='text-sm font-bold'>
+          Deployment Arguments
         </div>
+        <SolidityContractConstructorForm  
+          abi={contract.info.abi}
+        />
       </div>
     </div>
   )
