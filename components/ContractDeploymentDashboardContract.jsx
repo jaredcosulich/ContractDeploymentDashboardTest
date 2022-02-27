@@ -1,12 +1,25 @@
 import {
+  getEthereumGasEstimate,
   dateStringDiffToWords
 } from '../lib'
 
-
+import { useEffect, useState } from 'react';
 
 const ContractDeploymentDashboardContract = ({ contract }) => {
+  const [deploymentInfo, setDeploymentInfo] = useState();
 
+  useEffect(() => {
+    const getGasEstimate = async () => {
+      // G
+      const _deploymentInfo = await getEthereumGasEstimate(
 
+      );
+      setDeploymentInfo(_deploymentInfo);
+    }
+
+    getGasEstimate()
+  })
+  
 
   return (
     <div className='border p-3'>

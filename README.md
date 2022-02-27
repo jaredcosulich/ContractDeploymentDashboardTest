@@ -1,30 +1,5 @@
-TWButton is a very simple button that uses Tailwind CSS for styling.
+The ConnectWallet React component wraps the [web3modal](https://github.com/Web3Modal/web3modal) library with a basic configuration and a convenient button to connect your wallet.
 
-It uses [classMapMerge](/component/classMapMerge) to allow for existing Tailwind classnames to be overwritten.
+It can be customized to provide more wallet options.
 
-All standard buttons props will work.
-
-**Params**
-
-* classMap: the classmap of styles    
-* any param that works on a \<button/>
-
-Default classMap
-```
-  {
-    fontColor: 'text-white',
-    background: 'bg-green-500',
-    padding: 'px-3 py-1'
-  }
-```
-
-**Examples**
-
-```
-<TWButton
-  classMap={{
-    background: 'bg-red-500',
-    border: 'rounded-full'
-  }}
->
-```
+Once a wallet is connected any future component can be rendered. By default this component leverages a [CheckNetwork](http://localhost:3000/component/CheckNetwork) subcomponent that will verify that the wallet is on the correct network before proceeding.

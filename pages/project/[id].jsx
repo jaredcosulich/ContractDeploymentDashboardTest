@@ -4,6 +4,8 @@ import {
 
 import {
   ContractDeploymentDashboardTestLayout,
+  TWCenteredContent,
+  ConnectWalletButton,
   TWCircleSpinner,
   ContractDeploymentDashboardContract
 } from '../../components'
@@ -13,6 +15,7 @@ import { useRouter } from 'next/router'
 
 const ContractDeploymentDashboardProjectPage = () => {
   const router = useRouter()
+  const [provider, setProvider] = useState()
   const [project, setProject] = useState()
   
   useEffect(() => {
@@ -27,9 +30,21 @@ const ContractDeploymentDashboardProjectPage = () => {
 
     getProject()
   }, [router.query])
+
+  const getProvider = async () => {
+    const provider = await web3Provider()
+    setProvider(provider)
+  }
   
   return (
     <ContractDeploymentDashboardTestLayout>
+      <TWCenteredContent>
+        <div className='py-6'>
+          <ConnectWalletButton
+            network='rinkeby'
+          />
+        </div>
+      </TWCenteredContent>
       {!project &&
         <TWCircleSpinner
           message="Loading project..."
@@ -48,6 +63,7 @@ const ContractDeploymentDashboardProjectPage = () => {
               (contract, index) => (
                 <ContractDeploymentDashboardContract
                   key={`contract-${index}`}
+                  provider={provider}
                   contract={contract}
                 />
               )

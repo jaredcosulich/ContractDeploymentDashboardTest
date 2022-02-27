@@ -1,6 +1,6 @@
 const TWCenteredContent = ({ children }) => {
   return (
-    <div className="flex items-center justify-center flex-grow font-">
+    <div className="flex items-center justify-center flex-grow">
       <div className="inline-block">
     	  {children}
       </div>
