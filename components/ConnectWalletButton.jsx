@@ -7,7 +7,7 @@ import {
 import { useEffect, useState } from 'react';
 import Web3Modal from "web3modal";
 
-const ConnectWalletButton = ({ providerOptions, network }) => {  
+const ConnectWalletButton = ({ providerOptions, network, onConnect }) => {  
   const [web3Modal, setWeb3Modal] = useState()
   const [provider, setProvider] = useState()
 
@@ -41,6 +41,9 @@ const ConnectWalletButton = ({ providerOptions, network }) => {
     <EnsureCorrectEthereumNetwork 
       provider={provider}
       network={network}
+      onCorrectNetwork={() => {
+        onConnect(provider)
+      }}
     />
   );
 }

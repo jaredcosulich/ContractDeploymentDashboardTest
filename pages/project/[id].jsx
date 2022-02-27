@@ -30,21 +30,19 @@ const ContractDeploymentDashboardProjectPage = () => {
 
     getProject()
   }, [router.query])
-
-  const getProvider = async () => {
-    const provider = await web3Provider()
-    setProvider(provider)
-  }
   
   return (
     <ContractDeploymentDashboardTestLayout>
+      {!provider && 
       <TWCenteredContent>
         <div className='py-6'>
           <ConnectWalletButton
             network='rinkeby'
+            onConnect={setProvider}
           />
         </div>
       </TWCenteredContent>
+      }
       {!project &&
         <TWCircleSpinner
           message="Loading project..."

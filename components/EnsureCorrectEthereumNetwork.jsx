@@ -13,7 +13,7 @@ const EnsureCorrectEthereumNetwork = ({ provider, network, onCorrectNetwork }) =
       const _activeNetwork = await provider.getNetwork()
 
       if (_activeNetwork) {
-        if (_activeNetwork === network) {
+        if (_activeNetwork.name === network) {
           onCorrectNetwork()
         } else {
           setWrongNetwork(_activeNetwork.name)

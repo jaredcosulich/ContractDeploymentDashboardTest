@@ -5,20 +5,28 @@ import {
 
 import { useEffect, useState } from 'react';
 
-const ContractDeploymentDashboardContract = ({ contract }) => {
+const ContractDeploymentDashboardContract = ({ provider, contract }) => {
   const [deploymentInfo, setDeploymentInfo] = useState();
 
   useEffect(() => {
     const getGasEstimate = async () => {
-      // G
+      console.log("CONTRACT", contract)
       const _deploymentInfo = await getEthereumGasEstimate(
-
+        provider,
+        contract.info.abi,
+        contract.info.bytecode,
+        [
+          "SimpleURI",
+          "SURI",
+          "https://arweave.net/4usQHuUrIKOMahMjSlgYsPKjOp2wPSP8Z8Qs6NmcT_k/",
+          "100000"
+        ]
       );
       setDeploymentInfo(_deploymentInfo);
     }
 
     getGasEstimate()
-  })
+  }, [provider, contract])
   
 
   return (
@@ -31,6 +39,9 @@ const ContractDeploymentDashboardContract = ({ contract }) => {
           Compiled: 
         </span>
         {dateStringDiffToWords(contract.compiledAt)}
+        <div>
+          {JSON.stringify(deploymentInfo || {}, null, 2)}
+        </div>
       </div>
     </div>
   )
