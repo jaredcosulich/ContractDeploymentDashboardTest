@@ -5,7 +5,7 @@ import { ethereumNetworkIdToName } from '../lib'
 
 import { ethers } from 'ethers';
 
-const DeploySolidityContractButton = ({ provider, abi, bytecode, deployArguments }) => {
+const DeploySolidityContractButton = ({ provider, abi, bytecode, deploymentArguments }) => {
 
   const deployContract = async () => {
     const { chainId } = await provider.getNetwork()
@@ -18,7 +18,7 @@ const DeploySolidityContractButton = ({ provider, abi, bytecode, deployArguments
     const factory = new ethers.ContractFactory(abi, bytecode, signer);
 
     try {
-      const contract = await factory.deploy(...deployArguments);
+      const contract = await factory.deploy(...deploymentArguments);
       const receipt = await contract.deployTransaction.wait();
       console.log("RECEIPT", receipt)
     } catch (e) {

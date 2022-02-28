@@ -36,21 +36,20 @@ const ContractDeploymentDashboardProjectPage = () => {
   return (
     <ContractDeploymentDashboardTestLayout>
       {!provider && 
-      <TWCenteredContent>
-        <div className='py-6'>
-          <ConnectWalletButton
-            network='rinkeby'
-            onConnect={setProvider}
-          />
-        </div>
-      </TWCenteredContent>
+        <TWCenteredContent>
+          <div className='py-6'>
+            <ConnectWalletButton
+              onConnect={setProvider}
+            />
+          </div>
+        </TWCenteredContent>
       }
-      {!project &&
+      {provider && !project &&
         <TWCircleSpinner
           message="Loading project..."
         />
       }
-      {project &&
+      {provider && project &&
         <div>        
           <h2 className='text-lg mb-6'>
             <span className='font-bold mr-3'>

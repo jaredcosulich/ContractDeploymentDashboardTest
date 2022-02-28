@@ -20,7 +20,7 @@ const ConnectWalletButton = ({ providerOptions, network, onConnect }) => {
     })
 
     setWeb3Modal(modal);
-  }, [])
+  }, [network, providerOptions])
 
   if (!web3Modal) {
     return (
@@ -49,8 +49,7 @@ const ConnectWalletButton = ({ providerOptions, network, onConnect }) => {
 }
 
 ConnectWalletButton.defaultProps = {
-  providerOptions: {},
-  network: 'rinkeby'
+  providerOptions: {}
 }
 
 export default ConnectWalletButton;

@@ -9,6 +9,11 @@ const EnsureCorrectEthereumNetwork = ({ provider, network, onCorrectNetwork }) =
   const [wrongNetwork, setWrongNetwork] = useState();
 
   useEffect(() => {
+    if (!network) {
+      onCorrectNetwork();
+      return;
+    }
+
     const getActiveNetwork = async () => {
       const _activeNetwork = await provider.getNetwork()
 
@@ -22,7 +27,7 @@ const EnsureCorrectEthereumNetwork = ({ provider, network, onCorrectNetwork }) =
     }
 
     getActiveNetwork();
-  }, [provider, network])
+  }, [provider, network, onCorrectNetwork])
 
   if (!wrongNetwork) {
     return (

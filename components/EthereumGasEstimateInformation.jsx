@@ -8,14 +8,21 @@ import {
 } from '.'
 
 import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const EthereumGasEstimateInformation = ({ provider, contract, deploymentArguments }) => {
-  const [deploymentInfo, setDeploymentInfo] = useState();
+  const [network, setNetwork] = useState();
+  const [gasEstimate, setGasEstimate] = useState();
+  const [gasPrice, setGasPrice] = useState();
+
+  const getAndSetGasPrice = useMemo(() => async () => {
+    const gasPrice = await provider.getGasPrice();
+    setGasPrice(gasPrice);
+  }, [provider])
 
   useEffect(() => {
-    if (deploymentInfo && !deploymentArguments) {
-      setDeploymentInfo(null)
+    if (gasEstimate && !deploymentArguments) {
+      setGasEstimate(null)
     }
 
     if (!deploymentArguments) {
@@ -23,19 +30,25 @@ const EthereumGasEstimateInformation = ({ provider, contract, deploymentArgument
     }
 
     const getGasEstimate = async () => {
-      const _deploymentInfo = await getEthereumGasEstimate(
+      const gasEstimateInfo = await getEthereumGasEstimate(
         provider,
         contract.info.abi,
         contract.info.bytecode,
         deploymentArguments
       );
-      setDeploymentInfo(_deploymentInfo);
+      setNetwork(gasEstimateInfo.network);
+      setGasEstimate(gasEstimateInfo.gas);
     }
 
     getGasEstimate()
-  }, [deploymentInfo, provider, contract, deploymentArguments])
+    getAndSetGasPrice()
+  }, [gasEstimate, provider, contract, deploymentArguments, getAndSetGasPrice])
+
+  // useEffect(() => {
+  //   setTimeout(getAndSetGasPrice, 1000)
+  // }, [gasPrice, getAndSetGasPrice])
   
-  if (!deploymentInfo) {
+  if (!deploymentArguments) {
     return (
       <div className='text-xs py-6'>
         Provide deployment arguments to get
@@ -45,24 +58,55 @@ const EthereumGasEstimateInformation = ({ provider, contract, deploymentArgument
     )
   }
 
+  const readableGasPrice = gasPrice ? (
+    Math.round(
+      (ethers.utils.formatUnits(gasPrice, "gwei") * 100)
+    ) / 100
+  ) : null;
+
+  const estimatedCost = (gasEstimate && gasPrice) ? (
+    Math.round(
+      ethers.utils.formatEther(
+        ethers.BigNumber.from(gasEstimate).mul(ethers.BigNumber.from(gasPrice))
+      ) * 100000
+    ) / 100000
+  ) : null;
+
+  if (gasEstimate && gasPrice) {
+    console.log(ethers.utils.formatEther(
+      ethers.BigNumber.from(gasEstimate).mul(ethers.BigNumber.from(gasPrice))
+    ), estimatedCost, Math.round(
+      (ethers.utils.formatEther(
+        ethers.BigNumber.from(gasEstimate).mul(ethers.BigNumber.from(gasPrice))
+      ) * 100000))/ 100000) 
+  }
+  
   return (
     <div>
-      <BoldKeyAndValue
-        title="Network"
-        value={ethereumNetworkIdToName(deploymentInfo.network)}
-      />
-      <BoldKeyAndValue
-        title="Gas"
-        value={ethers.utils.commify(deploymentInfo.gas)}
-      />
-      <BoldKeyAndValue
-        title="Gas Price"
-        value={`${Math.round(deploymentInfo.price * 100) / 100} GWEI`}
-      />
-      <BoldKeyAndValue
-        title="Transaction Cost"
-        value={`${Math.round(deploymentInfo.cost * 10000) / 10000} ETH`}
-      />      
+      {network && 
+        <BoldKeyAndValue
+          title="Network"
+          value={ethereumNetworkIdToName(network)}
+        />
+      }
+      {gasEstimate &&
+        <BoldKeyAndValue
+          title="Gas"
+          value={ethers.utils.commify(gasEstimate)}
+        />
+      }
+      {readableGasPrice && 
+        <BoldKeyAndValue
+          title="Gas Price"
+          value={`${readableGasPrice} GWEI`}
+        />
+      }
+      {estimatedCost !== null &&
+        <BoldKeyAndValue
+          title="Transaction Cost"
+          value={`${estimatedCost} ETH`}
+        />      
+      }
     </div>
   )
 
