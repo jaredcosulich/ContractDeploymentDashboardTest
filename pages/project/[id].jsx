@@ -19,8 +19,10 @@ const ContractDeploymentDashboardProjectPage = () => {
   const [project, setProject] = useState()
   
   useEffect(() => {
+    const { id } = router.query;
+    if (!id) return;
+
     const getProject = async () => {
-      const { id } = router.query;
       const _project = await simpleApiCall(
         `projects/${id}`,
         'GET'

@@ -2,34 +2,44 @@ import {
   SolidityABIFormInput
 } from '.'
 
-import { useState } from 'react'
+import { useEffect, useRef, useMemo } from 'react'
 
 const SolidityContractConstructorForm = ({ abi, onChange }) => {
-  const [args, setArgs] = useState({})
+  const args = useRef({})
 
   const constructor = abi.find(
     (item) => item.type === 'constructor'
   )
 
-  const onInternalChange = (name, value) => {
-    setArgs({
-      ...args,
-      [name]: value
-    })
-
-    const argCount = Object.keys(args).length
-    if (argCount === constructor.inputs.length) {
+  const onChangeIfArgsComplete = useMemo(() => () => {
+    const validArgCount = Object.values(args.current).filter(
+      (value) => value?.length > 0
+    ).length
+    if (validArgCount === constructor.inputs.length) {
       const orderedArgs = []
       for (const input of constructor.inputs) {
         orderedArgs.push(
-          args[input.name]
+          args.current[input.name]
         )
       }
       onChange(orderedArgs)
     } else {
       onChange(null)
     }
+  }, [constructor.inputs, onChange])
+
+  const onInternalChange = (name, value) => {
+    args.current = {
+      ...args.current,
+      [name]: value
+    }
+
+    onChangeIfArgsComplete()
   }
+
+  useEffect(() => {
+    onChangeIfArgsComplete()
+  }, [onChangeIfArgsComplete])
   
   return (
     <div>

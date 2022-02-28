@@ -1,11 +1,17 @@
 import store from 'store2';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const SolidityABIFormInput = ({ abiInput, className, onChange }) => {
   const { name, type } = abiInput;
   const storeInput = store.namespace('abiInput')
 
-  const [value, setValue] = useState(storeInput(name))
+  const [value, setValue] = useState(storeInput(name) || "")
+
+  useEffect(() => {
+    if (value?.length) {
+      onChange(name, value)
+    }
+  }, [onChange, name, value])
 
   const getInputType = () => {
     switch (type) {
@@ -19,9 +25,8 @@ const SolidityABIFormInput = ({ abiInput, className, onChange }) => {
 
   const internalChange = (event) => {
     const newValue = event.target.value;
-    setValue(newValue)
-    onChange(name, newValue)
     storeInput(name, newValue)
+    setValue(newValue)
   }
 
   return (

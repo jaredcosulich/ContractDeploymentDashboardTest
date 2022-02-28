@@ -30,7 +30,22 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
           </div>
           <SolidityContractConstructorForm  
             abi={contract.info.abi}
-            onChange={setDeploymentArguments}
+            onChange={(args) => {
+              if (!args) {
+                if (deploymentArguments) {
+                  setDeploymentArguments(args)
+                }
+                return;
+              }
+
+              args.forEach(
+                (arg, index) => {
+                  if ((deploymentArguments || [])[index] !== arg) {
+                    setDeploymentArguments(args);
+                  }
+                }
+              ) 
+            }}
           />
         </div>
         <div className='px-12'>
