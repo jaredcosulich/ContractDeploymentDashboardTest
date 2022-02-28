@@ -8,12 +8,13 @@ import {
 } from '.'
 
 import { ethers } from 'ethers';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const EthereumGasEstimateInformation = ({ provider, contract, deploymentArguments }) => {
   const [network, setNetwork] = useState();
   const [gasEstimate, setGasEstimate] = useState();
   const [gasPrice, setGasPrice] = useState();
+  const gasPriceTimeout = useRef();
 
   const getAndSetGasPrice = useMemo(() => async () => {
     const gasPrice = await provider.getGasPrice();
@@ -44,9 +45,13 @@ const EthereumGasEstimateInformation = ({ provider, contract, deploymentArgument
     getAndSetGasPrice()
   }, [gasEstimate, provider, contract, deploymentArguments, getAndSetGasPrice])
 
-  // useEffect(() => {
-  //   setTimeout(getAndSetGasPrice, 1000)
-  // }, [gasPrice, getAndSetGasPrice])
+  useEffect(() => {
+    if (gasPriceTimeout.current) {
+      clearTimeout(gasPriceTimeout.current);
+    }
+
+    gasPriceTimeout.current = setTimeout(getAndSetGasPrice, 1000)
+  }, [gasPrice, getAndSetGasPrice])
   
   if (!deploymentArguments) {
     return (
@@ -72,15 +77,6 @@ const EthereumGasEstimateInformation = ({ provider, contract, deploymentArgument
     ) / 100000
   ) : null;
 
-  if (gasEstimate && gasPrice) {
-    console.log(ethers.utils.formatEther(
-      ethers.BigNumber.from(gasEstimate).mul(ethers.BigNumber.from(gasPrice))
-    ), estimatedCost, Math.round(
-      (ethers.utils.formatEther(
-        ethers.BigNumber.from(gasEstimate).mul(ethers.BigNumber.from(gasPrice))
-      ) * 100000))/ 100000) 
-  }
-  
   return (
     <div>
       {network && 
