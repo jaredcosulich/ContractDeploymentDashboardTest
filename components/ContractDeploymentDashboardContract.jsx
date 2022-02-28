@@ -1,41 +1,17 @@
 import {
-  getEthereumGasEstimate,
   dateStringDiffToWords
 } from '../lib'
 
 import {
-  SolidityContractConstructorForm
+  SolidityContractConstructorForm,
+  EthereumGasEstimateInformation
 } from '.'
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const ContractDeploymentDashboardContract = ({ provider, contract }) => {
   const [deploymentArguments, setDeploymentArguments] = useState();
-  const [deploymentInfo, setDeploymentInfo] = useState();
-
-  useEffect(() => {
-    if (deploymentInfo && !deploymentArguments) {
-      setDeploymentInfo(null)
-    }
-
-    if (!deploymentArguments) {
-      return;
-    }
-
-    const getGasEstimate = async () => {
-      const _deploymentInfo = await getEthereumGasEstimate(
-        provider,
-        contract.info.abi,
-        contract.info.bytecode,
-        deploymentArguments
-      );
-      setDeploymentInfo(_deploymentInfo);
-    }
-
-    getGasEstimate()
-  }, [provider, contract, deploymentArguments])
   
-
   return (
     <div className='border p-3'>
       <h3 className='font-bold mb-3'>
@@ -61,16 +37,11 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
           <h2 className='mb-3'>
             Deploy Contract
           </h2>
-          {!deploymentInfo &&
-            <div className='text-xs py-6'>
-              Provide deployment arguments to get
-              <br/>
-              an estimate on gas or deploy the contract.
-            </div>
-          }
-          {deploymentInfo &&
-            JSON.stringify(deploymentInfo)
-          }
+          <EthereumGasEstimateInformation
+            provider={provider}
+            contract={contract}
+            deploymentArguments={deploymentArguments}
+          />
         </div>
       </div>
     </div>
