@@ -42,16 +42,16 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
       </div>
       <div className='flex text-xs'>   
         <div className='px-12'>
-          <div className='text-sm font-bold'>
+          <h2 className='text-sm font-bold mb-3'>
             Deployment Arguments
-          </div>
+          </h2>
           <SolidityContractConstructorForm  
             abi={contract.info.abi}
             onChange={onArgsChange}
           />
         </div>
         <div className='px-12'>
-          <h2 className='mb-3'>
+          <h2 className='text-sm font-bold mb-3'>
             Deploy Contract
           </h2>
           <EthereumGasEstimateInformation

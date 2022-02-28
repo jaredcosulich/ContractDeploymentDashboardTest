@@ -1,5 +1,6 @@
 import {
-  getEthereumGasEstimate
+  getEthereumGasEstimate,
+  ethereumNetworkIdToName
 } from '../lib'
 
 import {
@@ -48,7 +49,7 @@ const EthereumGasEstimateInformation = ({ provider, contract, deploymentArgument
     <div>
       <BoldKeyAndValue
         title="Network"
-        value={deploymentInfo.network}
+        value={ethereumNetworkIdToName(deploymentInfo.network)}
       />
       <BoldKeyAndValue
         title="Gas"
