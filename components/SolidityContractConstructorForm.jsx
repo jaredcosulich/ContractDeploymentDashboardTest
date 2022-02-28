@@ -15,6 +15,7 @@ const SolidityContractConstructorForm = ({ abi, onChange }) => {
     const validArgCount = Object.values(args.current).filter(
       (value) => value?.length > 0
     ).length
+
     if (validArgCount === constructor.inputs.length) {
       const orderedArgs = []
       for (const input of constructor.inputs) {

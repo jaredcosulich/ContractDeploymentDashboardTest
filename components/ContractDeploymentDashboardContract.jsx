@@ -4,7 +4,8 @@ import {
 
 import {
   SolidityContractConstructorForm,
-  EthereumGasEstimateInformation
+  EthereumGasEstimateInformation,
+  DeploySolidityContractButton
 } from '.'
 
 import { useState } from 'react';
@@ -59,6 +60,16 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
             contract={contract}
             deploymentArguments={deploymentArguments}
           />
+          {deploymentArguments && (
+            <div className='mt-6'>
+              <DeploySolidityContractButton
+                provider={provider}
+                abi={contract.info.abi}
+                bytecode={contract.info.bytecode}
+                deploymentArguments={deploymentArguments}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
