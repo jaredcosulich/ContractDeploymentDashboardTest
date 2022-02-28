@@ -12,6 +12,23 @@ import { useState } from 'react';
 const ContractDeploymentDashboardContract = ({ provider, contract }) => {
   const [deploymentArguments, setDeploymentArguments] = useState();
   
+  const onArgsChange = (args) => {
+    if (!args) {
+      if (deploymentArguments) {
+        setDeploymentArguments(args)
+      }
+      return;
+    }
+
+    args.forEach(
+      (arg, index) => {
+        if ((deploymentArguments || [])[index] !== arg) {
+          setDeploymentArguments(args);
+        }
+      }
+    ) 
+  }
+
   return (
     <div className='border p-3'>
       <h3 className='font-bold mb-3'>
@@ -23,29 +40,14 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
         </span>
         {dateStringDiffToWords(contract.compiledAt)}
       </div>
-      <div className='flex'>   
-        <div className='px-12 text-xs'>
+      <div className='flex text-xs'>   
+        <div className='px-12'>
           <div className='text-sm font-bold'>
             Deployment Arguments
           </div>
           <SolidityContractConstructorForm  
             abi={contract.info.abi}
-            onChange={(args) => {
-              if (!args) {
-                if (deploymentArguments) {
-                  setDeploymentArguments(args)
-                }
-                return;
-              }
-
-              args.forEach(
-                (arg, index) => {
-                  if ((deploymentArguments || [])[index] !== arg) {
-                    setDeploymentArguments(args);
-                  }
-                }
-              ) 
-            }}
+            onChange={onArgsChange}
           />
         </div>
         <div className='px-12'>

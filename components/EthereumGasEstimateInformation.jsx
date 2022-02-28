@@ -6,6 +6,7 @@ import {
   BoldKeyAndValue
 } from '.'
 
+import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 
 const EthereumGasEstimateInformation = ({ provider, contract, deploymentArguments }) => {
@@ -31,7 +32,7 @@ const EthereumGasEstimateInformation = ({ provider, contract, deploymentArgument
     }
 
     getGasEstimate()
-  }, [provider, contract, deploymentArguments])
+  }, [deploymentInfo, provider, contract, deploymentArguments])
   
   if (!deploymentInfo) {
     return (
@@ -50,9 +51,17 @@ const EthereumGasEstimateInformation = ({ provider, contract, deploymentArgument
         value={deploymentInfo.network}
       />
       <BoldKeyAndValue
-        key="Gas"
-        value={JSON.stringify(deploymentInfo)}
+        title="Gas"
+        value={ethers.utils.commify(deploymentInfo.gas)}
       />
+      <BoldKeyAndValue
+        title="Gas Price"
+        value={`${Math.round(deploymentInfo.price * 100) / 100} GWEI`}
+      />
+      <BoldKeyAndValue
+        title="Transaction Cost"
+        value={`${Math.round(deploymentInfo.cost * 10000) / 10000} ETH`}
+      />      
     </div>
   )
 
