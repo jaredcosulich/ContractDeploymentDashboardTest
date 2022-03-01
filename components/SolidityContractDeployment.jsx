@@ -1,6 +1,9 @@
 import {
   ethereumNetworkIdToName,
-  dateStringDiffToWords
+  dateStringDiffToWords,
+  commify,
+  bigNumberToEth,
+  bigNumberFrom
 } from '../lib'
 
 import {
@@ -24,11 +27,15 @@ const SolidityContractDeployment = ({ deployment }) => {
         />
         <BoldKeyAndValue
           title="Gas Used"
-          value={JSON.stringify(deployment.gasUsed)}
+          value={commify(deployment.gasUsed)}
         />
         <BoldKeyAndValue
           title="Cost"
-          value={JSON.stringify(deployment.effectiveGasPrice)}
+          value={`${bigNumberToEth(
+            bigNumberFrom(deployment.effectiveGasPrice).mul(
+              bigNumberFrom(deployment.gasUsed)
+            )
+          )} ETH`}
         />
         <BoldKeyAndValue
           title="Arguments"
