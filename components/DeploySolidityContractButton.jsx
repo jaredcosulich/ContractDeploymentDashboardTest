@@ -1,11 +1,14 @@
 import {
+  ethereumNetworkIdToName
+} from '../lib'
+
+import {
   TWButton
 } from '.'
-import { ethereumNetworkIdToName } from '../lib'
 
 import { ethers } from 'ethers';
 
-const DeploySolidityContractButton = ({ provider, abi, bytecode, deploymentArguments }) => {
+const DeploySolidityContractButton = ({ provider, abi, bytecode, deploymentArguments, onDeploy }) => {
 
   const deployContract = async () => {
     const { chainId } = await provider.getNetwork()
@@ -20,7 +23,7 @@ const DeploySolidityContractButton = ({ provider, abi, bytecode, deploymentArgum
     try {
       const contract = await factory.deploy(...deploymentArguments);
       const receipt = await contract.deployTransaction.wait();
-      console.log("RECEIPT", receipt)
+      onDeploy(receipt)
     } catch (e) {
       console.error("Error deploying contract", e)
     }

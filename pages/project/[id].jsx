@@ -51,23 +51,27 @@ const ContractDeploymentDashboardProjectPage = () => {
       }
       {provider && project &&
         <div>        
-          <h2 className='text-lg mb-6'>
+          <h2 className='text-lg'>
             <span className='font-bold mr-3'>
               Project:
             </span>
             {project.title}
           </h2>
-          <div className='flex'>
-            {project.contracts.map(
-              (contract, index) => (
+          {project.contracts.sort(
+            (a, b) => new Date(b.compiledAt) - new Date(a.compiledAt)
+          ).map(
+            (contract, index) => (
+              <div 
+                key={`contract-${index}`}
+                className='py-3'
+              >
                 <ContractDeploymentDashboardContract
-                  key={`contract-${index}`}
                   provider={provider}
                   contract={contract}
                 />
-              )
-            )}
-          </div>
+              </div>
+            )
+          )}
         </div>        
       }
     </ContractDeploymentDashboardTestLayout>
