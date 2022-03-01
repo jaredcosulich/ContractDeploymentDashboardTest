@@ -82,8 +82,15 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
           </span>
           {dateStringDiffToWords(contract.compiledAt)}
         </div>
-        <div className='flex text-xs'>   
-          <div className='px-12'>
+        <div className='flex text-xs'>
+          {activeContract.info?.deployments &&
+            <div className='pr-12 text-sm'>
+              <SolidityContractDeployments
+                deployments={activeContract.info.deployments}
+              />
+            </div>
+          }   
+          <div className='pr-12'>
             <h2 className='text-sm font-bold mb-3'>
               Deployment Arguments
             </h2>
@@ -92,7 +99,7 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
               onChange={onArgsChange}
             />
           </div>
-          <div className='px-12'>
+          <div>
             <h2 className='text-sm font-bold mb-3'>
               Deploy Contract
             </h2>
@@ -114,11 +121,6 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
             )}
           </div>
         </div>
-      </div>
-      <div className='pt-3'>
-        <SolidityContractDeployments
-          deployments={activeContract.info?.deployments || []}
-        />
       </div>
     </div>
 
