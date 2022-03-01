@@ -15,6 +15,8 @@ export { default as SolidityContractConstructorForm } from './SolidityContractCo
 export { default as BoldKeyAndValue } from './BoldKeyAndValue'
 export { default as EthereumGasEstimateInformation } from './EthereumGasEstimateInformation'
 export { default as DeploySolidityContractButton } from './DeploySolidityContractButton'
+export { default as SolidityContractDeployment } from './SolidityContractDeployment'
+export { default as SolidityContractDeployments } from './SolidityContractDeployments'
 export { default as ContractDeploymentDashboardContract } from './ContractDeploymentDashboardContract'
 export { default as NextLink } from './NextLink'
 export { default as ContractDeploymentDashboardProject } from './ContractDeploymentDashboardProject'

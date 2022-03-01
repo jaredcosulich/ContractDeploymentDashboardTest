@@ -1,14 +1,13 @@
 import {
   simpleApiCall,
-  dateStringDiffToWords,
-  ethereumNetworkIdToName
+  dateStringDiffToWords
 } from '../lib'
 
 import {
   SolidityContractConstructorForm,
   EthereumGasEstimateInformation,
   DeploySolidityContractButton,
-  BoldKeyAndValue
+  SolidityContractDeployments
 } from '.'
 
 import { useMemo, useState } from 'react';
@@ -33,13 +32,12 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
       return;
     }
 
-    args.forEach(
-      (arg, index) => {
-        if ((deploymentArguments || [])[index] !== arg) {
-          setDeploymentArguments(args);
-        }
-      }
+    const newArg = args.find(
+      (arg, index) => ((deploymentArguments || [])[index]?.value !== arg.value)
     ) 
+    if (newArg) {
+      setDeploymentArguments(args);
+    }
   }
 
   const onDeploy = async (receipt) => {
@@ -118,55 +116,9 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
         </div>
       </div>
       <div className='pt-3'>
-        <h2 className='font-bold py-3'>Deployments</h2>
-        <div className='flex'>
-          {(activeContract.info?.deployments || []).sort(
-            (a, b) => b.deployedAt - a.deployedAt
-          ).map(
-            (deployment, index) => (
-              <div 
-                key={`deployment-${index}`}
-                className='border p-3 mr-3 text-sm'
-              >
-                <div className='font-bold'>
-                  {ethereumNetworkIdToName(deployment.network)}: 
-                  &nbsp;
-                  {dateStringDiffToWords(deployment.deployedAt)}
-                </div>
-                <div className='text-xs pt-3'>
-                  <BoldKeyAndValue
-                    title="Address"
-                    value={deployment.contractAddress}
-                  />
-                  <BoldKeyAndValue
-                    title="Gas Used"
-                    value={JSON.stringify(deployment.gasUsed)}
-                  />
-                  <BoldKeyAndValue
-                    title="Cost"
-                    value={JSON.stringify(deployment.effectiveGasPrice)}
-                  />
-                  <BoldKeyAndValue
-                    title="Arguments"
-                    value={(
-                      <div className='pl-3'>
-                        {deployment.deploymentArguments.map(
-                          (arg, argIndex) => (
-                            <BoldKeyAndValue
-                              key={`deployment-arg-${index}-${argIndex}`}
-                              title={arg.name || argIndex + 1}
-                              value={arg.value || arg}
-                            />
-                          )
-                        )}
-                      </div>
-                    )}
-                  />
-                </div>
-              </div>
-            )
-          )}
-        </div>
+        <SolidityContractDeployments
+          deployments={activeContract.info?.deployments || []}
+        />
       </div>
     </div>
 
