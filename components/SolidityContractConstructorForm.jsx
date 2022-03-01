@@ -19,9 +19,10 @@ const SolidityContractConstructorForm = ({ abi, onChange }) => {
     if (validArgCount === constructor.inputs.length) {
       const orderedArgs = []
       for (const input of constructor.inputs) {
-        orderedArgs.push(
-          args.current[input.name]
-        )
+        orderedArgs.push({
+          name: input.name,
+          value: args.current[input.name]
+        })
       }
       onChange(orderedArgs)
     } else {

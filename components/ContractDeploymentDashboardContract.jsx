@@ -11,12 +11,20 @@ import {
   BoldKeyAndValue
 } from '.'
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 const ContractDeploymentDashboardContract = ({ provider, contract }) => {
   const [deploymentArguments, setDeploymentArguments] = useState();
   const [activeContract, setActiveContract] = useState(contract);
   
+  const orderedArgumentValues = useMemo(() => {
+    if (!deploymentArguments) return null;
+    
+    return deploymentArguments.map(
+      (argument) => argument.value
+    );
+  }, [deploymentArguments]);
+
   const onArgsChange = (args) => {
     if (!args) {
       if (deploymentArguments) {
@@ -93,7 +101,7 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
             <EthereumGasEstimateInformation
               provider={provider}
               contract={contract}
-              deploymentArguments={deploymentArguments}
+              deploymentArguments={orderedArgumentValues}
             />
             {deploymentArguments && (
               <div className='mt-6'>
@@ -101,7 +109,7 @@ const ContractDeploymentDashboardContract = ({ provider, contract }) => {
                   provider={provider}
                   abi={contract.info.abi}
                   bytecode={contract.info.bytecode}
-                  deploymentArguments={deploymentArguments}
+                  deploymentArguments={orderedArgumentValues}
                   onDeploy={onDeploy}
                 />
               </div>
