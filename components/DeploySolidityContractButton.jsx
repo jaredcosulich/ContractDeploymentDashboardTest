@@ -1,7 +1,10 @@
 import {
+  ethereumNetworkIdToName
+} from '../lib'
+
+import {
   TWButton
 } from '.'
-import { ethereumNetworkIdToName } from '../lib'
 
 import { ethers } from 'ethers';
 

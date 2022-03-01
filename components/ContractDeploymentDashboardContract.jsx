@@ -1,7 +1,7 @@
 import {
+  simpleApiCall,
   dateStringDiffToWords,
-  ethereumNetworkIdToName,
-  simpleApiCall
+  ethereumNetworkIdToName
 } from '../lib'
 
 import {
