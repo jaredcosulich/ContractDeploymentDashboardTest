@@ -5,93 +5,58 @@ import {
 import {
   ContractDeploymentDashboardTestLayout,
   TWConstrainedCenteredContent,
+  TWCircleSpinner,
   SupabaseMagicLink,
   ContractDeploymentDashboardProjects
 } from '.'
 
-import { useUser, Auth } from '@supabase/supabase-auth-helpers/react'
-// import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import { useEffect, useState } from 'react'
 
 const ContractDeploymentDashboardTest = ({  }) => {
-  const { user, error } = useUser()
-  const [data, setData] = useState({})
+  const [user, setUser] = useState()
+  const [waiting, setWaiting] = useState({})
 
   useEffect(() => {
-    console.log("USER", user)
-    const user2 = supabaseClient.auth.user()
-    console.log(user2)
-    async function loadData() {
-      const { data } = await supabaseClient.from('test').select('*')
-      setData(data)
+    const _user = supabaseClient.auth.user()
+    if (_user) { 
+      setUser(_user)
+    } else {
+      setTimeout(() => setWaiting(false), 1000)
     }
-    // Only run query once user is logged in.
-    if (user) loadData()
-  }, [user])
+
+    supabaseClient.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+          setUser(session.user);
+        } else if (session === null) {
+          setUser(null);
+        }
+      }
+    );
+  }, [])
 
   if (!user) {
     return (
       <ContractDeploymentDashboardTestLayout>
         <TWConstrainedCenteredContent>
           <div className='py-12'>
-            {error && <p>{error.message}</p>}
-            <SupabaseMagicLink />
+            {waiting &&
+              <TWCircleSpinner />
+            }
+            {!waiting &&    
+              <SupabaseMagicLink />
+            }
           </div>
         </TWConstrainedCenteredContent>
       </ContractDeploymentDashboardTestLayout>
     )
   }
 
-  // if (!user) {
-  //   return (
-  //     <ContractDeploymentDashboardTestLayout>
-  //       <TWConstrainedCenteredContent>
-  //         <div className='py-12'>
-  //           {error && <p>{error.message}</p>}
-  //           <Auth
-  //             // view="update_password"
-  //             supabaseClient={supabaseClient}
-  //             providers={['github']}
-  //             socialLayout="horizontal"
-  //             socialButtonSize="xlarge"
-  //             magicLink={true}
-  //           />
-  //         </div>
-  //       </TWConstrainedCenteredContent>
-  //     </ContractDeploymentDashboardTestLayout>
-  //   )
-  // }
-
   return (
     <ContractDeploymentDashboardTestLayout>
       <ContractDeploymentDashboardProjects />
-
-      <button onClick={() => supabaseClient.auth.signOut()}>Sign out</button>
-      <p>user:</p>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
-      <p>client-side data fetching with RLS</p>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
     </ContractDeploymentDashboardTestLayout>
   )
-
-  // return (
-  //   <div>
-  //     <ContractDeploymentDashboardHeader />
-  //     <LatestContractCompilation />
-  //     <ContractDeployments />
-  //   </div>
-  // )
 }
-
-// export const getServerSideProps = async ({ req }) => {
-//   const token = req.headers.AUTHORIZATION
-//   const userId = await getUserId(token)
-//   const posts = await prisma.post.findMany({
-//     where: {
-//       author: { id: userId },
-//     },
-//   })
-//   return { props: { posts } }
-// }
 
 export default ContractDeploymentDashboardTest;
