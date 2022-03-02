@@ -1,4 +1,8 @@
 import {
+  supabaseClient
+} from '../lib'
+
+import {
   ContractDeploymentDashboardTestLayout,
   TWConstrainedCenteredContent,
   SupabaseMagicLink,
@@ -6,7 +10,7 @@ import {
 } from '.'
 
 import { useUser, Auth } from '@supabase/supabase-auth-helpers/react'
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
+// import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import { useEffect, useState } from 'react'
 
 const ContractDeploymentDashboardTest = ({  }) => {
@@ -15,6 +19,8 @@ const ContractDeploymentDashboardTest = ({  }) => {
 
   useEffect(() => {
     console.log("USER", user)
+    const user2 = supabaseClient.auth.user()
+    console.log(user2)
     async function loadData() {
       const { data } = await supabaseClient.from('test').select('*')
       setData(data)

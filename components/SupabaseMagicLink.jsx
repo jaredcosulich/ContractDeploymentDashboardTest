@@ -6,11 +6,11 @@ import {
   TWButton
 } from '.'
 
-
+// import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import { useState } from 'react';
 
 const SupabaseMagicLink = () => {
-  const [user, setUser] = useState()
+  const [sent, setSent] = useState(false)
   const [error, setError] = useState()
   const [email, setEmail] = useState('')
 
@@ -19,8 +19,10 @@ const SupabaseMagicLink = () => {
       email: email
     })
 
-    setUser(user);
     setError(error);
+    if (!error) {
+      setSent(true)
+    }
   }
 
   return (
@@ -29,13 +31,13 @@ const SupabaseMagicLink = () => {
         Magic Link Login
       </h2>
       {error && 
-        <div>
-          {JSON.stringify(error)}
+        <div className='text-red-600 py-3'>
+          {error.message}
         </div>
       }
-      {user &&
-        <div>
-          {JSON.stringify(user)}
+      {sent &&
+        <div className='py-3'>
+          An email has been sent to the address you provided.
         </div>
       }
       <div>
