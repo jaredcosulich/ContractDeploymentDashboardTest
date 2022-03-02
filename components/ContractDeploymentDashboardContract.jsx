@@ -4,10 +4,10 @@ import {
 } from '../lib'
 
 import {
+  SolidityContractDeployments,
   SolidityContractConstructorForm,
   EthereumGasEstimateInformation,
-  DeploySolidityContractButton,
-  SolidityContractDeployments
+  DeploySolidityContractButton
 } from '.'
 
 import { useMemo, useState } from 'react';

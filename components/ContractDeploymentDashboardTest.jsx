@@ -1,5 +1,7 @@
 import {
   ContractDeploymentDashboardTestLayout,
+  TWConstrainedCenteredContent,
+  SupabaseMagicLink,
   ContractDeploymentDashboardProjects
 } from '.'
 
@@ -20,6 +22,19 @@ const ContractDeploymentDashboardTest = ({  }) => {
     // Only run query once user is logged in.
     if (user) loadData()
   }, [user])
+
+  if (!user) {
+    return (
+      <ContractDeploymentDashboardTestLayout>
+        <TWConstrainedCenteredContent>
+          <div className='py-12'>
+            {error && <p>{error.message}</p>}
+            <SupabaseMagicLink />
+          </div>
+        </TWConstrainedCenteredContent>
+      </ContractDeploymentDashboardTestLayout>
+    )
+  }
 
   // if (!user) {
   //   return (
